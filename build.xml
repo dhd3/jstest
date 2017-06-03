@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="jstest" default="build">
+  <property name="basedir" value="." />
+  <property name="antpath" value="/usr/local/bin/ant" />
+  <property name="appdir"  value="${basedir}/app" />
+  <property name="datadir" value="${basedir}/data" />
+  <property name="logdir"  value="${datadir}/build/logs" />
+  <property name="outdir"  value="${basedir}/out" />
+  <target name="build" depends="clean,prepare,runJsHint,compile">
+  </target>
+
+  <target name="clean" description="clean">
+    <delete dir="${logdir}" />
+    <delete dir="${outdir}" />
+    <delete dir="${datadir}/build/coverage" />
+    <delete dir="${datadir}/build/phpdoc" />
+  </target>
+
+  <target name="prepare" description="prepare">
+    <mkdir dir="${logdir}" />
+    <mkdir dir="${outdir}" />
+    <mkdir dir="${datadir}/build/coverage" />
+    <mkdir dir="${datadir}/build/phpdoc" />
+  </target>
+
+  <!-- Define the task -->
+  <taskdef name="jshint" classname="com.philmander.jshint.JsHintAntTask" />
+  <taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" />
+  <!--  classpath="/tmp/closure-compiler-v20170521.jar"/>-->
+
+  <target name="runJsHint">
+    <!-- Lint the code -->
+    <jshint dir="${basedir}/src/js" includes="**/*.js" />
+  </target>
+
+  <target name="compile">
+    <jscomp compilationLevel="simple" warning="verbose" 
+	    debug="false" output="${outdir}/file.js">
+
+      <sources dir="${basedir}/src/js">
+        <file name="test.js"/>
+      </sources>
+    </jscomp>
+  </target>
+
+</project>
